@@ -207,7 +207,6 @@ class ACase extends PluginBase implements Listener{
             $event->setCancelled(true);
             $player->removeWindow($chest);
             $this->tasks[$player->getName()] = $player->getServer()->getScheduler()->scheduleRepeatingTask(new Cancel($this, $player), 1);
-            unset($this->type[$player->getName()]);
          }
     }
     
@@ -222,8 +221,8 @@ class ACase extends PluginBase implements Listener{
         }
         $true = $this->type[$player->getName()][0];
         $chest = $this->type[$player->getName()][1];
-        if($true !== null){
-           $this->tasks[$player->getName()] = $player->getServer()->getScheduler()->scheduleRepeatingTask(new Closed($this, $player, $chest), 1);
+        if($true == "true"){
+           $this->tasks[$player->getName()] = $player->getServer()->getScheduler()->scheduleRepeatingTask(new Closed($this, $player, $chest), 20, 20);
         }
     }
     

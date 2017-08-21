@@ -37,6 +37,7 @@ use EpicCase\Inventory\WindowInventory;
 use EpicCase\Inventory\WindowHolder;
 
 use EpicCase\Canceled\Cancel;
+use EpicCase\Canceled\Closed;
 
 use EpicCase\Menu\Menu;
 
@@ -45,18 +46,10 @@ use EpicCase\Caixa\Normal;
 use EpicCase\Caixa\Epica;
 
 class ACase extends PluginBase implements Listener{
-      
-	private $refreshRate = 1;
     
 	public function onEnable(){
-		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->refreshRate = 1;
-        $this->pegar = true;
-        $this->FactionsPro = $this->getServer()->getPluginManager()->getPlugin("FactionsPro");
-        if(!$this->FactionsPro) {
-            $this->getLogger()->info("O FactionsPro Não Foi Ativado");
-       }
-   }
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
+    }
 
 	public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
          switch(strtolower($command->getName())){              
@@ -111,11 +104,11 @@ class ACase extends PluginBase implements Listener{
                       $inv->addItem($epica);
                       $sender->sendMessage("§l§a(!)§r §aCaixa Epica Comprada!");
                 }
-				if(strtolower($args[0]) == "lista"){
+                if(strtolower($args[0]) == "lista"){
 				   $sender->sendMessage("§l§a(!)§r §aListas de caixas:");
 				   $sender->sendMessage("- §l§a(!)§r §aBasica: §a$10\n-- §l§a(!)§r §aNormal: §a$20\n--- §l§a(!)§r §aEpica: §a$30");
 				}
-				if(strtolower($args[0]) == "ajuda"){
+                if(strtolower($args[0]) == "ajuda"){
 				   $sender->sendMessage("§l§a(!)§r §aComandos Disponiveis");
 				   $sender->sendMessage("§a/caixa comprar <caixa> <quantidade> §7Para comprar uma caixa");
 				   $sender->sendMessage("§a/caixa lista §7Para ver a lista de caixas");
@@ -199,7 +192,6 @@ class ACase extends PluginBase implements Listener{
          }                       
          if($id == 159 and $damage == 13){
             $event->setCancelled(true);
-            unset($this->type[$player->getName()]);
             if($type == "Basica"){
                $this->tasks[$player->getName()] = $player->getServer()->getScheduler()->scheduleRepeatingTask(new Basica($this, $player, $chest), 1);
             }
@@ -209,6 +201,7 @@ class ACase extends PluginBase implements Listener{
             if($type == "Epica"){
                $this->tasks[$player->getName()] = $player->getServer()->getScheduler()->scheduleRepeatingTask(new Epica($this, $player, $chest), 1);
             }
+           $this->type[$player->getName()] = ["true", $chest];
          }
          if($id == 159 and $damage == 14){
             $event->setCancelled(true);
@@ -216,7 +209,23 @@ class ACase extends PluginBase implements Listener{
             $this->tasks[$player->getName()] = $player->getServer()->getScheduler()->scheduleRepeatingTask(new Cancel($this, $player), 1);
             unset($this->type[$player->getName()]);
          }
-    }        
+    }
+    
+    public function onClose(InventoryCloseEvent $event){
+        $player = $event->getPlayer();
+        $inventory = $event->getInventory();
+        if(!$inventory instanceof WindowHolder){
+           return;
+        }
+        if(!isset($this->type[$player->getName()])){
+           return;
+        }
+        $true = $this->type[$player->getName()][0];
+        $chest = $this->type[$player->getName()][1];
+        if($true !== null){
+           $this->tasks[$player->getName()] = $player->getServer()->getScheduler()->scheduleRepeatingTask(new Closed($this, $player, $chest), 1);
+        }
+    }
     
     public function onPickup(InventoryPickupItemEvent $event){
         $player = $event->getInventory()->getHolder();

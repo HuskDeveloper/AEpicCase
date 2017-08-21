@@ -9,4 +9,5 @@ or
 
 # TODO
 - Make a version for 1.x 
-- Config for edit items - ...
+- Config for edit items 
+- ...

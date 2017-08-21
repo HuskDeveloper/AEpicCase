@@ -16,13 +16,11 @@ class Cancel extends PluginTask {
     
 	public function __construct(ACase $plugin, Player $player){
 		$this->plugin = $plugin;
-        $this->chest = $chest;
         $this->player = $player;
 		parent::__construct($plugin);
 	}
       
 	public function onRun($timer){ 
-        $chest = $this->chest;
         $player = $this->player;
         $type = $this->plugin->type[$player->getName()][0];
         if($this->time > 0){

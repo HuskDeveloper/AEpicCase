@@ -8,6 +8,8 @@ use pocketmine\scheduler\PluginTask;
 
 use pocketmine\item\Item;
 
+use EpicCase\ACase;
+
 class Menu extends PluginTask {
     
     public $time = 2;   

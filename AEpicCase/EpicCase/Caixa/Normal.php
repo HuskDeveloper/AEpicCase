@@ -304,27 +304,14 @@ class Normal extends PluginTask {
      
     $chest = $this->chest; 
     $this->player->getLevel()->addSound(new ClickSound($this->player), $this->player->getLevel()->getPlayers());       
-        
-    $this->setItem(0,159,1,0);
-    $this->setItem(1,159,1,0);
-    $this->setItem(2,159,1,0);
-    $this->setItem(3,159,1,0);
-    $this->setItem(4,159,1,0);
-    $this->setItem(5,159,1,0);
-    $this->setItem(6,159,1,0);
-    $this->setItem(7,159,1,0);
-    $this->setItem(8,159,1,0);
-    $this->setItem(18,159,1,0);
-    $this->setItem(19,159,1,0);
-    $this->setItem(20,159,1,0);
-    $this->setItem(21,159,1,0);
-    $this->setItem(22,159,1,0);
-    $this->setItem(23,159,1,0);
-    $this->setItem(24,159,1,0);
-    $this->setItem(25,159,1,0);
-    $this->setItem(26,159,1,0);
-    $this->setItem(27,159,1,0);    
-        
+       
+    for($index = 0; $index < 9; $index++){
+      $this->setItem($index, 159, 1, 0);
+    }
+    for($index = 18; $index < 28; $index++){
+      $this->setItem($index, 159, 1, 0);
+    }
+		
     if($this->time > 0){
     $this->time--;
     }
